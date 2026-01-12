@@ -1,0 +1,9 @@
+{
+  "routerMap": [
+    {
+      "name": "PlaceDetailPage",
+      "pageSourceFile": "src/main/ets/pages/PlaceDetailPage.ets",
+      "buildFunction": "placeDetailPageBuilder"
+    }
+  ]
+}

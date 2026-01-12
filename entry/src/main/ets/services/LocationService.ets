@@ -1,26 +1,29 @@
 import { geoLocationManager } from '@kit.LocationKit';
-import { abilityAccessCtrl,Permissions,bundleManager, common, PermissionRequestResult } from '@kit.AbilityKit';
-import {mapCommon, map } from '@kit.MapKit';
+import { abilityAccessCtrl, Permissions, bundleManager, common, PermissionRequestResult } from '@kit.AbilityKit';
+import { mapCommon, map } from '@kit.MapKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import GlobalContext from './GlobalContext';
 
 export class LocationService {
   private mapController?: map.MapComponentController;
+
   async checkPermissions(): Promise<boolean> {
     const permissions: Array<Permissions> = ['ohos.permission.LOCATION', 'ohos.permission.APPROXIMATELY_LOCATION'];
     for (let permission of permissions) {
       let grantStatus: abilityAccessCtrl.GrantStatus = await this.checkAccessToken(permission);
       if (grantStatus === abilityAccessCtrl.GrantStatus.PERMISSION_GRANTED) {
         this.mapController?.setMyLocationEnabled(true);
-          this.mapController?.setMyLocationControlsEnabled(true);
+        this.mapController?.setMyLocationControlsEnabled(true);
         return true;
       }
     }
     return false;
   }
+
   static async getCurrentLocationSafe(): Promise<mapCommon.LatLng> {
     const fallbackLocation: mapCommon.LatLng = {
-      latitude: 0.447967,
-      longitude: 0.179380
+      latitude: 38.447967,
+      longitude: 27.179380 // Mistral İzmir
     };
 
     const service = new LocationService();
@@ -45,10 +48,10 @@ export class LocationService {
   }
 
 
-
-static requestPermissions(): void {
+  static requestPermissions(): void {
     const atManager = abilityAccessCtrl.createAtManager();
-    atManager.requestPermissionsFromUser(getContext() as common.UIAbilityContext, [
+    const context = GlobalContext.getInstance().getSavedContext();
+    atManager.requestPermissionsFromUser(context, [
       'ohos.permission.LOCATION',
       'ohos.permission.APPROXIMATELY_LOCATION'
     ])
@@ -61,13 +64,13 @@ static requestPermissions(): void {
   }
 
 
-
   async checkAccessToken(permission: Permissions): Promise<abilityAccessCtrl.GrantStatus> {
     let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
     let grantStatus: abilityAccessCtrl.GrantStatus = abilityAccessCtrl.GrantStatus.PERMISSION_DENIED;
 
     let tokenId: number = 0;
-    let bundleInfo: bundleManager.BundleInfo = await bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
+    let bundleInfo: bundleManager.BundleInfo =
+      await bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
     console.info('Succeeded in getting Bundle.');
     let appInfo: bundleManager.ApplicationInfo = bundleInfo.appInfo;
     tokenId = appInfo.accessTokenId;
@@ -76,5 +79,4 @@ static requestPermissions(): void {
     console.info('Succeeded in checking access token.');
     return grantStatus;
   }
-
 }

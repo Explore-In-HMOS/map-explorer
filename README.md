@@ -11,10 +11,10 @@ The application enables users to:
 
 # Preview
 <div>
-  <img src="./screenshots/Group1.png" width="24%"/> 
-  <img src="./screenshots/Group2.png" width="24%"/>
-  <img src="./screenshots/Group3.png" width="24%"/>
-  <img src="./screenshots/Group4.png" width="24%"/>
+  <img src="./screenshots/Group1.png" width="25%"/> 
+  <img src="./screenshots/second.png" width="25%"/>
+  <img src="./screenshots/Group3.png" width="25%"/>
+  <img src="./screenshots/Group4.png" width="25%"/>
 </div>
 
 
@@ -50,13 +50,15 @@ By combining POI search, map visualization, and route rendering from a predefine
 entry/src/main/ets/
 |---common
 |   |---types.ets                  // POI and LatLng models
+|---components
+|   |---PoiCard.ets                // POI card component with navigation
+|   |---SearchInput.ets            // Keyword search input
 |---pages
 |   |---HomePage.ets               // Home view with map, POI search
 |   |---PlaceDetailPage.ets        // POI detail view with route planner
-|   |---SearchPage.ets             // Text input and arcbutton for searching
-|   |---SearchResultsPage.ets      // Search results
 |---services
-|   |---LocationService.ets        // Permission & location access`
+|   |---GlobalContext.ets          // Context DI
+|   |---LocationService.ets        // Permission & location access1`
 |   |---NavigationService.ets      // Route planning logic
 |   |---SiteService.ets            // POI search service
 |---resources

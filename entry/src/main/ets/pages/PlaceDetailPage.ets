@@ -1,12 +1,17 @@
 import { map, mapCommon, MapComponent } from '@kit.MapKit';
+import { BusinessError } from '@kit.BasicServicesKit';
 import site from '@hms.core.map.site';
-import { router } from '@kit.ArkUI';
 import { NavigationService } from '../services/NavigationService';
 
 interface RouterParams {
   siteId?: string;
 }
-@Entry
+
+@Builder
+function placeDetailPageBuilder() {
+  PlaceDetailPage()
+}
+
 @Component
 export struct PlaceDetailPage {
   private mapController?: map.MapComponentController;
@@ -14,74 +19,80 @@ export struct PlaceDetailPage {
   @State markerOptions?: mapCommon.MarkerOptions | null = null;
   private destination?: mapCommon.LatLng;
 
-  aboutToAppear(): void {
-    const params: RouterParams = router.getParams() as RouterParams;
-    const siteId = params.siteId;
-
-    site.searchById({ siteId }).then(result => {
-      const siteData = result.site;
-      if (siteData && siteData.location) {
-        this.destination = siteData.location;
-        this.mapOptions = {
-          position: {
-            target: siteData.location,
-            zoom: 15
-          }
-        };
-        this.markerOptions = {
-          position: siteData.location,
-          title: siteData.name ?? ''
-        };
-      }
-    });
-  }
   build() {
-    Column() {
-      Text('Place Details')
-        .fontSize(15)
-        .fontWeight(FontWeight.Bold)
-        .padding(8)
-        .width("100%")
-        .textAlign(TextAlign.Center)
-      if (this.mapOptions) {
-        Column() {
-          MapComponent({
-            mapOptions: this.mapOptions,
-            mapCallback: async (err, ctrl) => {
-              if (!err) {
-                this.mapController = ctrl;
-                if (this.markerOptions) {
-                  await ctrl?.addMarker(this.markerOptions);
+    NavDestination() {
+      Column() {
+        Text('Place Details')
+          .fontSize(15)
+          .fontWeight(FontWeight.Bold)
+          .padding(8)
+          .width('100%')
+          .textAlign(TextAlign.Center)
+        if (this.mapOptions) {
+          Column() {
+            MapComponent({
+              mapOptions: this.mapOptions,
+              mapCallback: async (err: BusinessError, ctrl: map.MapComponentController) => {
+                if (!err) {
+                  this.mapController = ctrl;
+                  if (this.markerOptions) {
+                    await ctrl?.addMarker(this.markerOptions);
+                  }
                 }
               }
+            })
+              .width('130%')
+              .height(200)
+
+            Row() {
+              Image($r('app.media.navi'))
+                .onClick(() => this.onRoutePress())
+                .width(24)
+                .height(24)
             }
-          })
-            .width('130%')
-            .height(200)
-
-          Row() {
-            Image($r("app.media.navi"))
-              .onClick(() => this.onRoutePress())
-              .width(24)
-              .height(24)
+            .padding(4)
+            .borderRadius(10)
+            .backgroundColor(Color.Black)
+            .margin({ top: -190, left: -150 })
           }
-          .padding(4)
-          .borderRadius(10)
-          .backgroundColor(Color.Black)
-          .margin({ top: -190 , left:-150})
+
+        } else {
+          Text('Loading map...')
+            .width('100%')
+            .textAlign(TextAlign.Center)
         }
-
-
-      } else {
-        Text('Loading map...')
-          .width("100%")
-          .textAlign(TextAlign.Center)
       }
+      .padding(12)
     }
-    .padding(12)
+    .hideTitleBar(true)
+    .hideToolBar(true)
+    .onReady((ctx: NavDestinationContext) => {
+      const params: RouterParams = ctx?.pathInfo?.param as RouterParams;
+      const siteId = params.siteId;
+
+      site.searchById({ siteId }).then(result => {
+        const siteData = result.site;
+        if (siteData && siteData.location) {
+          this.destination = siteData.location;
+          this.mapOptions = {
+            position: {
+              target: siteData.location,
+              zoom: 15
+            }
+          };
+          this.markerOptions = {
+            position: siteData.location,
+            title: siteData.name ?? ''
+          };
+        }
+      });
+    })
   }
+
   async onRoutePress() {
-    if (!this.destination || !this.mapController) return;
+    if (!this.destination || !this.mapController) {
+      return;
+    }
 
     const routeResult = await NavigationService.getDrivingRouteTo(this.destination);
 

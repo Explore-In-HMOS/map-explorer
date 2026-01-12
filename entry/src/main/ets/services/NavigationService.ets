@@ -1,5 +1,4 @@
-import { navi } from '@kit.MapKit';
-import type { mapCommon } from '@kit.MapKit';
+import { navi, type mapCommon } from '@kit.MapKit';
 import { LocationService } from './LocationService';
 
 export class NavigationService {
