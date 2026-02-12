@@ -11,10 +11,10 @@ The application enables users to:
 
 # Preview
 <div>
-  <img src="./screenshots/Group1.png" width="25%"/> 
-  <img src="./screenshots/second.png" width="25%"/>
-  <img src="./screenshots/Group3.png" width="25%"/>
-  <img src="./screenshots/Group4.png" width="25%"/>
+  <img src="./screenshots/Group1.png" width="24%"/> 
+  <img src="./screenshots/second.png" width="24%"/>
+  <img src="./screenshots/Group3.png" width="24%"/>
+  <img src="./screenshots/Group4.png" width="24%"/>
 </div>
 
 
@@ -79,4 +79,5 @@ entry/src/main/ets/
 
 
 # License
+
 Map And Navigation App is distributed under the terms of the MIT License. See the [LICENSE](/LICENSE) for more information.
