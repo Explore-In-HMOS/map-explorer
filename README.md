@@ -2,7 +2,7 @@
 
 # Map Explorer App
 
-This demo showcases a smartwatch-friendly, location-based navigation application built using HarmonyOS NEXT APIs.
+This demo showcases a smartwatch-friendly, location-based navigation application built using HarmonyOS APIs.
 Designed with wearable device constraints in mind, it provides an intuitive and lightweight interface for quick navigation directly from your wrist.
 The application enables users to:
 - Search for places (POI) using text-based queries.
